@@ -1,0 +1,113 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sample Site</title>
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+  <!-- <link rel='stylesheet' href='/stylesheets/style.css' /> -->
+
+  <!-- <link rel="stylesheet" type="text/css" href="resources/ThirdParty/bootstrap-3.2.0-dist/css/bootstrap.css"> -->
+  <link rel="stylesheet" type="text/css" href="/resources/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/resources/css/app.css">
+  <style type="text/css">
+    .welcome {
+      padding: 0px;
+      margin: 0 0 20px 0;
+      /* background-color: #CCC; */
+    }
+    .welcome h1{
+      margin-top: 20px;
+      
+    }
+    .container{
+      padding-left: 0px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="/home/dashboard">Home</a>
+            </li>
+            <li>
+              <a href="/home/map#<%=country%>">Map</a>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="/home/profile">Profile</a>
+            </li>
+            <li>
+              <a href="/home/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+        <!--/.nav-collapse -->
+      </div>
+      <!--/.container-fluid -->
+    </nav>
+
+
+      <div class="welcome">
+        <!-- <h1>Welcome</h1>
+        <p>Hello Mr. <%=user.last_name%></p> -->
+        <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                My Visited Country, City, Places
+              </h3>
+              
+            </div>
+            <div class="panel-body">
+              
+              <div>
+                  <table class="display" id="MyVisitsTable" >
+                    <thead>
+                      <tr>
+                        <th>SL</th>
+                        <th>Country</th>
+                        <th>City/Place</th>
+                        <th>Travelmates</th>
+                        <th colspan="2">Duration</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <% 
+                        var j=1;
+                        for(var i=0; i<data.length; i++) { %>
+                      <tr>
+                        <td><%=j++%></td>
+                        <td><%=data[i].CountryName%></td>
+                        <td><%=data[i].VisitedCity%></td>
+                        <td><%=data[i].VisitedWith%></td>
+                        <td><%=data[i].FromDate%></td>
+                        <td><%=data[i].ToDate%></td>
+                        <td></td>
+                      </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+          </div>
+      </div>
+      
+      
+      <script>
+      $(document).ready( function () {
+          $('#MyVisitsTable').DataTable();
+      } );
+      </script>
+    <%- include footer %>
