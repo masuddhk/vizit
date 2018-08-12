@@ -10,7 +10,8 @@ exports.signup = function (req, res) {
     var lname = post.last_name;
     var mob = post.mob_no;
 
-    var sql = "INSERT INTO `users`(`first_name`,`last_name`,`mob_no`,`user_name`, `password`) VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "')";
+    var sql = "INSERT INTO `users`(`first_name`,`last_name`,`mob_no`,`user_name`, `password`) \
+    VALUES ('" + fname + "','" + lname + "','" + mob + "','" + name + "','" + pass + "')";
 
     var query = db.query(sql, function (err, result) {
 
@@ -68,21 +69,23 @@ exports.dashboard = function (req, res, next) {
   //console.log('SQL: ' + sql);
   var CC = '';
   db.query(sql, function (err, results) {
-    CC = results[0].Countries;
+    if (results.length > 0) {
+      CC = results[0].Countries;
+    }
   });
 
-  sql = "SELECT u.first_name,u.last_name,v.CountryCode,c.name as CountryName,vd.FromDate,vd.ToDate,vd.VisitedWith,vd.VisitedCity \
+
+  sql = "SELECT u.first_name,u.last_name,v.CountryCode,c.name as CountryName,v.FromDate,v.ToDate,v.VisitedWith,v.VisitedCity \
           FROM uservisits v   \
           INNER JOIN users u ON u.id=v.UserId   \
           INNER JOIN country c ON c.iso=v.CountryCode   \
-          LEFT JOIN uservisitdet vd ON vd.VisitId=v.VisitId   \
           WHERE v.UserId='" + userId + "'";
 
-          //console.log(sql);
+  //console.log(sql);
 
   db.query(sql, function (err, results) {
     //console.log(JSON.stringify(results));
-    res.render('dashboard.ejs', { data: results,user: user, country: CC });
+    res.render('dashboard.ejs', { data: results, user: user, country: CC });
   });
 
 
@@ -107,7 +110,9 @@ exports.profile = function (req, res) {
   //console.log('SQL: ' + sql);
   var CC = '';
   db.query(sql, function (err, results) {
-    CC = results[0].Countries;
+    if (results.length > 0) {
+      CC = results[0].Countries;
+    }
   });
 
   var sql = "SELECT * FROM `users` WHERE `id`='" + userId + "'";
@@ -144,7 +149,9 @@ exports.map = function (req, res) {
   //console.log('SQL: ' + sql);
   var CC = '';
   db.query(sql, function (err, results) {
-    CC = results[0].Countries;
+    if (results.length > 0) {
+      CC = results[0].Countries;
+    }
   });
 
   res.render('map', { country: CC });
@@ -155,28 +162,30 @@ exports.map = function (req, res) {
 //---------------------------------------------signup page call------------------------------------------------------
 exports.saveVisitData = function (req, res) {
   message = '';
+  var dateFormat = require('dateformat');
   if (req.method == "POST") {
     var user = req.session.user,
       userId = req.session.userId;
 
     var post = req.body;
     var cc = post.cc;
-    var vfd = post.vfd;
-    var vtd = post.vtd;
+    var vfd = dateFormat(post.vfd, "mmm d, yyyy");
+    var vtd = dateFormat(post.vtd, "mmm d, yyyy");
     var vwith = post.vwith;
     var vcity = post.vcity;
 
-    var sql = "INSERT INTO `vizit`.`uservisits` (`UserId`, `CountryCode`) VALUES ('" + userId + "', '" + cc + "')";
-
-    console.log('SQL: ' + sql);
+ 
+    var sql = "INSERT INTO uservisits (`UserId`, `CountryCode`, `FromDate`, `ToDate`, `VisitedWith`, `VisitedCity`) \
+    VALUES ('" + userId + "', '" + cc + "','" + vfd + "','" + vtd + "', '" + vwith + "','" + vcity + "')";
+    //console.log('SQL: ' + sql);
     var query = db.query(sql, function (err, result) {
 
-      message = "Succesfully! Your account has been created.";
-      res.render('map.ejs', { message: message });
+      res.redirect('/home/dashboard');
+
     });
 
   } else {
-    res.render('map');
+    res.redirect('/home/dashboard');
   }
 };
 
