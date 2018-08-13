@@ -1,5 +1,5 @@
 {
-  "name": "myvizit",
+  "name": "vizit",
   "version": "0.1.0",
   "main": "app.js",
   "scripts": {
@@ -16,5 +16,5 @@
     "mysql": "^2.13.0",
     "req-flash": "0.0.3"
   },
-  "description": "My Visit Record Management"
+  "description": "ViZ-iT - My Visit Tracker"
 }
